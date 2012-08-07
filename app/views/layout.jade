@@ -1,0 +1,27 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+    script(type="text/javascript", src='/js/jquery-1.7.2.min.js')
+    script(type="text/javascript", src='/js/bootstrap.min.js')
+    script(type="text/javascript")
+        $(".collapse").collapse()
+
+    body
+    div.navbar.navbar-fixed-top
+        div.navbar-inner
+            div.container
+                a.btn.btn-navbar(data-toggle='collapse', data-target=".nav-collapse")
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+            
+                a.brand(href='/') Express on dotCloud
+               
+               div.nav-collapse()
+
+
+    block content
