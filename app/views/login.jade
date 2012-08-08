@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    form.well.form-horizontal(method="POST", action="/init-session")
+        fieldset What's you name ?
+            input(name="name", placeholder="waldo")
+
+            div.controls
+                button.btn(type="submit") It better no be an alias!
