@@ -1,15 +1,14 @@
 
 // Module dependencies
-var express = require('express')
-  , routes = require('./routes') // this is just like doing , routes = require('./routes/index.js')
-  , http = require('http')
-  , path = require('path');
+var express = require('express');
 
+// this is just like doing: var routes = require('./routes/index.js')
+var routes = require('./routes');
+var http = require('http');
+var path = require('path');
 var RedisStore = require('connect-redis')(express);
 
-
-
-// Let's keep out tools together
+// Let's group our tools together
 var tools = require('./tools.js');
 
 // Middleware are awesome, they able you to do a lt of things easily
@@ -20,7 +19,7 @@ var app = express();
 
 
 // Setup the option for the redisStore in which are saved the sessions
-var redisOptions = {prefix: 'myfirstapp'};
+var redisOptions = {prefix: 'myfirstapp:'};
 
 // Express configuration
 app.configure(function(){
@@ -43,14 +42,27 @@ app.configure(function(){
   app.use(express.cookieParser('My First Express App'));
   app.use(express.session({ store: new RedisStore(redisOptions) }));
 
-  app.use(app.router);
+
   app.use(express.static(path.join(__dirname, 'public')));
+  
+  /* 
+    Locals are super usefull they enable you to pass a value to all you templates.
+    This is super usefull for certain scenario like always giving the session.
+    Or like in this case the page we are on for the menu 
+  */
+  app.use(function(req, res, next){
+    res.locals.page = req._parsedUrl.pathname;
+    tools.log(req._parsedUrl.pathname);
+    next();
+  });
+  
+  app.use(app.router);
+
 });
 
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
-
 
 
 
@@ -62,10 +74,10 @@ app.configure('development', function(){
 */
 app.get('/', mid.auth, routes.index);
 
-// Actually let's have a polite url, by redirecting you to /Welcome, it sounds nicer
+// Actually let's have a polite url, by redirecting you to /Welcome, it looks nicer
 app.get('/welcome', mid.auth, routes.welcome);
 
-// A non protected route where to redirect the user to he can authenticate.
+// A non protected route where to redirect the user to he can enter his email addresse
 app.get('/who-are-you', routes.login);
 
 // Handle the authentication

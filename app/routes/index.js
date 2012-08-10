@@ -1,45 +1,80 @@
-var tools = require('../tools.js');
+var tools = require('../lib/tools.js');
+
+
+// Never trust your users, this modules is great for protecting yourself
+var check = require('validator').check;
+var sanitize = require('validator').sanitize;
+
+// Let's add some fun into this
+var gravatar = require('../lib/gravatar.js').avatar;
+
+// Redis client use for the admin page
+var red = require('redis').createClient();
 
 // Root route :D
 exports.index = function(req, res){
   res.redirect('/welcome');
 };
 
+// Home page
 exports.welcome = function(req, res){
-  res.render('welcome', { title: 'Express', session: req.session });
+  console.log(res.locals, res.locals.page)
+  res.render('welcome', { title: 'Welcome', session: req.session });
 };
 
+// Login form
 exports.login = function(req, res){
-  
-  res.render('login', { title: 'Express', session: req.session });
-
-  //res.redirect('/welcome');
+  res.render('login', { title: 'Enter your email', session: req.session });
 }
 
-// process auth
+// Process auth
 exports.initSession = function(req, res){
-  console.log("-- initSession body received:");
+
+  // If the session is empty let's init one with an empty array
+  if (!req.session) {
+    req.session = {};
+  }
+
+  // let's log what the user sent us
   tools.log(req.body);
 
-  if(req.body && req.body.name && req.body.name.length > 0) {
-    if (!req.session)
-        req.session = {};
+  // check if an email is given
+  if(!req.body || !req.body.email) {
+    req.session.error = "No email address given";
+    res.redirect('/who-are-you#no-email');
+    return;
+  }
 
-    req.session.name = req.body.name;
-    
-    res.redirect('/welcome');
+  // clean the email from XSS exploits
+  var email = sanitize(req.body.email).trim();
+  email = sanitize(email).xss();
+
+  // is this a valid email ?
+  try{
+    check(email).len(6).isEmail();
   }
-  else {
-    var data = {};
-    data.title = "Could you tell me you name ?";
-    data.error = "no name given or too short (at least 3 characters)";
-    res.redirect('/who-are-you', data);
+  catch(e) {
+    eq.session.error = "The given email address does not seems to be correct!";
+    res.redirect('/who-are-you#not-valid');
+    return;
   }
+
+  req.session.email = req.body.email;
+  req.session.gravatar = gravatar(req.body.email , 300);
+  
+  res.redirect('/welcome');
 }
-
 
 
 // admin page
 exports.admin = function(req, res){
-  res.render('admin', {users: []})
+  red.keys('myfirstapp:' + '*', function(err, sessionKeys) {
+      if (err) throw err;
+      red.mget(sessionKeys, function (error, data){
+
+        // the redis result is an array of JSON string, let's get the object from the strings
+        var d = data.map(JSON.parse);
+        res.render('admin', {title: 'Super secret admin page :D', users: d})
+      })
+  });
 }

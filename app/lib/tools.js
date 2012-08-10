@@ -1,4 +1,4 @@
-// Modules dependencies
+// Some useful modules
 var util = require('util');
 
 /*

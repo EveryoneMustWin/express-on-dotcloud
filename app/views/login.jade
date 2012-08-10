@@ -1,9 +1,11 @@
 extends layout
 
 block content
-    form.well.form-horizontal(method="POST", action="/init-session")
-        fieldset What's you name ?
-            input(name="name", placeholder="waldo")
-
-            div.controls
-                button.btn(type="submit") It better no be an alias!
+    div.span6.offset3
+        div(style="height:300px; margin-top: 10%")
+            form.well(method="POST", action="/init-session")
+                label Enter you email address: 
+                input.span5(type="text", name="email", placeholder="waldo@where.mi")
+                    
+                div
+                    button.btn.btn-primary(type="submit") Open a new session

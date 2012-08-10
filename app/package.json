@@ -8,7 +8,9 @@
   "dependencies": {
     "express": "3.0.0rc2",
     "jade": "*",
-    "connect-redis": "*"
+    "connect-redis": "*",
+    "validator": "*",
+    "redis" : ""
   },
   "description": "Boiler plate Express for dotCloud",
   "main": "app.js",
