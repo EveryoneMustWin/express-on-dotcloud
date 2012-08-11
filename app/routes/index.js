@@ -18,7 +18,6 @@ exports.index = function(req, res){
 
 // Home page
 exports.welcome = function(req, res){
-  console.log(res.locals, res.locals.page)
   res.render('welcome', { title: 'Welcome', session: req.session });
 };
 
