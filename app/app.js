@@ -52,7 +52,6 @@ app.configure(function(){
   */
   app.use(function(req, res, next){
     res.locals.page = req._parsedUrl.pathname;
-    tools.log(req._parsedUrl.pathname);
     next();
   });
   
