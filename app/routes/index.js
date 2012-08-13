@@ -40,7 +40,7 @@ exports.initSession = function(req, res){
   // check if an email is given
   if(!req.body || !req.body.email) {
     req.session.error = "No email address given";
-    res.redirect('/who-are-you#no-email');
+    res.redirect('/who-are-you');
     return;
   }
 
@@ -53,8 +53,8 @@ exports.initSession = function(req, res){
     check(email).len(6).isEmail();
   }
   catch(e) {
-    eq.session.error = "The given email address does not seems to be correct!";
-    res.redirect('/who-are-you#not-valid');
+    req.session.error = "The given email address does not seems to be correct!";
+    res.redirect('/who-are-you');
     return;
   }
 

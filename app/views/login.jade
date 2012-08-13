@@ -1,11 +1,20 @@
 extends layout
 
 block content
-    div.span6.offset3
-        div(style="height:300px; margin-top: 10%")
-            form.well(method="POST", action="/init-session")
-                label Enter you email address: 
-                input.span5(type="text", name="email", placeholder="waldo@where.mi")
+    div.span8.offset2
+        div
+            form.form-horizontal(method="POST", action="/init-session")
+                if (error)
+                    - var classError = "error"
+                else
+                    - var classError = ""
+
+                div.control-group(class=classError)
+                    label.control-label(for="email") Email address:
+                    div.controls
+                        input(type="text", name="email", id="email", placeholder="waldo@where.mi")
+                        if (error)
+                            span.help-inline= error
                     
-                div
-                    button.btn.btn-primary(type="submit") Open a new session
+                    div.form-actions
+                        button.btn.btn-primary(type="submit") Open a new session

@@ -51,7 +51,24 @@ app.configure(function(){
     Or like in this case the page we are on for the menu 
   */
   app.use(function(req, res, next){
+    // Let's give the requested page to the layout template to selected the right menu li as active
     res.locals.page = req._parsedUrl.pathname;
+
+    // This can also be used to handle errors
+    if (req.session.error) {
+      res.locals.error = req.session.error;
+      delete req.session.error;
+    }
+    else
+      res.locals.error = undefined;
+
+    // Something you may want to do
+    // res.locals.session = req.session;
+    // instead of passing {session: req.session} in every routes. Nice right ?
+    // if you do this way you can make routes in routes/index.js less verbose
+    // for example line 21 in routes/index.js would become:
+    // res.render('welcome', { title: 'Welcome'});
+
     next();
   });
   
