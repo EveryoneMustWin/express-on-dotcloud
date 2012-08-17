@@ -25,15 +25,6 @@ var redisOptions = {
     pass: process.env.DOTCLOUD_REDIS_REDIS_PASSWORD || null
 };
 
-if(process.env.DOTCLOUD_REDIS_REDIS_PORT)
-  redisOptions.port = process.env.DOTCLOUD_REDIS_REDIS_PORT;
-
-if(process.env.DOTCLOUD_REDIS_REDIS_HOST)
-  redisOptions.host = process.env.DOTCLOUD_REDIS_REDIS_HOST;
-
-if(process.env.DOTCLOUD_REDIS_REDIS_PASSWORD)
-  redisOptions.pass = process.env.DOTCLOUD_REDIS_REDIS_PASSWORD;
-
 
 // Express configuration
 app.configure(function(){
