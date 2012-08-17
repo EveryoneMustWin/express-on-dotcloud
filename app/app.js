@@ -19,7 +19,12 @@ var app = express();
 
 
 // Setup the option for the redisStore in which are saved the sessions
-var redisOptions = {prefix: 'myfirstapp:'};
+var redisOptions = {
+    prefix: 'myfirstapp:',
+    host: process.env.DOTCLOUD_REDIS_REDIS_HOST || '127.0.0.1',
+    port: process.env.DOTCLOUD_REDIS_REDIS_PORT || 6379,
+    pass: process.env.DOTCLOUD_REDIS_REDIS_PASSWORD || null
+};
 
 // Express configuration
 app.configure(function(){
