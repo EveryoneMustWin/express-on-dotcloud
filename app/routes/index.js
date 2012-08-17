@@ -1,5 +1,10 @@
 var tools = require('../lib/tools.js');
 
+var redisConfig = {
+    host: process.env.DOTCLOUD_REDIS_REDIS_HOST || '127.0.0.1',
+    port: process.env.DOTCLOUD_REDIS_REDIS_PORT || 6379,
+    pass: process.env.DOTCLOUD_REDIS_REDIS_PASSWORD || null
+};
 
 // Never trust your users, this modules is great for protecting yourself
 var check = require('validator').check;
@@ -9,7 +14,13 @@ var sanitize = require('validator').sanitize;
 var gravatar = require('../lib/gravatar.js').avatar;
 
 // Redis client use for the admin page
-var red = require('redis').createClient();
+var red = require('redis').createClient(redisConfig.port, redisConfig.host);
+
+redisConfig.pass && 
+    red.auth(redisConfig.pass, function(err) {
+        if (err)
+            throw err;
+    });
 
 // Root route :D
 exports.index = function(req, res){
